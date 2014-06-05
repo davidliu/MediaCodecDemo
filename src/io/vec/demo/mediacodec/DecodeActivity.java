@@ -70,26 +70,6 @@ public class DecodeActivity extends Activity implements SurfaceHolder.Callback {
 				NALUnitReader reader = new NALUnitReader(wrapper);
 
 				MediaFormat format = MediaFormat.createVideoFormat("video/avc", 320, 560);
-				String spsHex = "00 00 00 01 67 64 00 15 AC D9 41 40 47 A1 00 00 03 00 01 00 00 03 00 32 0F 16 2D 96";
-				String ppsHex = "00 00 00 01 68 EB E3 CB 22 C0";
-
-				String[] spsSplit = spsHex.split(" ");
-				String[] ppsSplit = ppsHex.split(" ");
-
-				byte[] spsHeader = new byte[spsSplit.length];
-				byte[] ppsHeader = new byte[ppsSplit.length];
-
-				for (int i = 0; i < spsHeader.length; i++) {
-					spsHeader[i] = (byte) (int) Integer.decode("0x" + spsSplit[i]);
-				}
-				for (int i = 0; i < ppsHeader.length; i++) {
-					ppsHeader[i] = (byte) (int) Integer.decode("0x" + ppsSplit[i]);
-				}
-				format.setInteger(MediaFormat.KEY_FRAME_RATE, 25);
-
-				format.setByteBuffer("csd-0", ByteBuffer.wrap(spsHeader));
-				format.setByteBuffer("csd-1", ByteBuffer.wrap(ppsHeader));
-
 				decoder = MediaCodec.createDecoderByType("video/avc");
 				decoder.configure(format, surface, null, 0);
 
@@ -144,9 +124,9 @@ public class DecodeActivity extends Activity implements SurfaceHolder.Callback {
 								byte firstByte = buffer.get(0);
 								if ((firstByte & 0x1F) == 0x08 || (firstByte & 0x1F) == 0x07) {
 									flags = MediaCodec.BUFFER_FLAG_CODEC_CONFIG;
-								} else {
-									decoder.queueInputBuffer(inIndex, 0, totalSize, 0, flags);
 								}
+								decoder.queueInputBuffer(inIndex, 0, totalSize, 0, flags);
+
 							}
 						}
 					}
