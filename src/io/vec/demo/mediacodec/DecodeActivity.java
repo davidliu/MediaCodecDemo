@@ -131,7 +131,7 @@ public class DecodeActivity extends Activity implements SurfaceHolder.Callback {
 						}
 					}
 
-					int outIndex = decoder.dequeueOutputBuffer(info, 100000);
+					int outIndex = decoder.dequeueOutputBuffer(info, 10000);
 					switch (outIndex) {
 						case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
 							Log.d("DecodeActivity", "INFO_OUTPUT_BUFFERS_CHANGED");
